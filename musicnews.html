@@ -1,0 +1,183 @@
+<!DOCTYPE HTML>
+
+<html>
+<!--Start of the header-->
+	<head>
+		<meta charset="utf-8">
+		<!-- content security for android -->
+		<!-- look here: http://stackoverflow.com/questions/30212306/no-content-security-policy-meta-tag-found-error-in-my-phonegap-application -->
+		<meta http-equiv="Content-Security-Policy" content="default-src * data: gap: https://ssl.gstatic.com 'unsafe-eval'; style-src 'self' 'unsafe-inline'; media-src *; script-src * 'unsafe-inline';">
+		<title>MUSIC NEWS</title>
+        <!--Start of Zopim Live Chat Script-->
+			<script type="text/javascript">
+            window.$zopim||(function(d,s){var z=$zopim=function(c){z._.push(c)},$=z.s=
+            d.createElement(s),e=d.getElementsByTagName(s)[0];z.set=function(o){z.set.
+            _.push(o)};z._=[];z.set._=[];$.async=!0;$.setAttribute("charset","utf-8");
+            $.src="//v2.zopim.com/?3kYl4B6acXdgYkN0JpabCShihhuA8wFt";z.t=+new Date;$.
+            type="text/javascript";e.parentNode.insertBefore($,e)})(document,"script");
+            </script>
+			<!--End of Zopim Live Chat Script-->
+            	<!--This link will allow for a small icon apearing on the users browser-->
+      			<link rel="icon" type="image/ico" href="../icon.png"/>
+				<meta charset="utf-8" />
+				<meta name="viewport" content="width=device-width, initial-scale=1" />
+		<!--[if lte IE 8]><script src="assets/js/ie/html5shiv.js"></script><![endif]-->
+        <!--Below linking the site to the stylesheet-->
+	
+		<!--[if lte IE 8]><link rel="stylesheet" href="assets/css/ie8.css" /><![endif]-->
+		<!--[if lte IE 9]><link rel="stylesheet" href="assets/css/ie9.css" /><![endif]-->
+		<link href="mainstyle.css" rel="stylesheet" type="text/css" />
+		<script type="text/javascript" src="js/jquery-2.2.3.min.js"></script>
+		<script type="text/javascript" src="js/functions.js"></script>
+	</head>
+
+    <!--End of header-->
+    <!--Start of body, also giving the body a class-->
+	<body class="landing">
+
+		<!-- Page Wrapper -->
+			<div id="page-wrapper">
+
+				<!-- Header insdie the body -->
+					<header id="header" class="alt">
+                    <!--Title of the site displayed inside the header image-->
+						<h1><a href="index.html">WAVES</a></h1>
+                        <!--Start of the navagation bar-->
+						<nav id="nav">
+							<ul>
+                            <!--List of the navagation bar-->
+								<li class="special">
+                                <!--Menu button to open up the navagation-->
+									<a href="#menu" class="menuToggle"><span>Menu</span></a>
+									<div id="menu">
+										<ul>
+                                        	<!--Home page link-->
+											<li><a href="index.html">Home</a></li>
+                                            <!--Music news page link-->
+											<li><a href="register.html">Sign Up</a></li>
+                                            <!--Log in page link-->
+											<li><a href="login.html">Log In</a></li>
+                                            <!--Chat page link-->
+                                            <li><a href="chat/chat.html">Chat</a></li>
+                                            
+                                            <!--Sign up page link-->
+                                            <li><a href="1/artistotd.html">Artist of the week</a></li>
+                                            <!--Sign up page link-->
+                                            
+											
+										</ul>
+									</div>
+								</li>
+                                <!--End of list-->
+							</ul>
+                            <!--End of navagation-->
+						</nav>
+					</header>
+                    <!--End of header-->
+
+				<!-- Banner -->
+					<section id="banner">
+						<div class="inner">
+                        <!--Text title which displays inside the image-->
+							<h2>WAVES</h2>
+						</div>
+                        <!--A music news button for the user to continue to the main page-->
+						<a href="#one" class="more scrolly">MUSIC NEWS</a>
+					</section>
+
+				<!-- First section -->
+					<section id="one" class="wrapper style1 special">
+						<div class="inner">
+                        <!-- Header class for first section -->
+							<header class="major">
+                            <!-- Title of first section -->
+								<h2>MUSIC NEWS</h2>
+							</header>
+							<!--Start of the icon list with in first section-->
+						
+						</div>
+					</section>
+
+				<!-- Second section -->
+					<section id="two" class="wrapper alt style2">
+						<section class="spotlight">
+                        <!-- Twitter RSS feed -->
+							<a class="twitter-timeline" href="https://twitter.com/Kyle_Lindsay1/lists/music" data-widget-id="702300777193349124">Tweets from https://twitter.com/Kyle_Lindsay1/lists/music</a>
+<script>!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0],p=/^http:/.test(d.location)?'http':'https';if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src=p+"://platform.twitter.com/widgets.js";fjs.parentNode.insertBefore(js,fjs);}}(document,"script","twitter-wjs");</script>
+                            
+                            <div class="content">
+                            <!--Title of RSS feed-->
+								<h2>TWITTER</h2>
+                                <!--Short description of RSS feed-->
+								<p>Have a look at the latest trends on twitter in the music world.</p>
+							</div>
+						</section>
+                        
+                        
+						<section class="spotlight">
+                        <!--Image of album cover, which will send the user to spotify to play that album-->
+							<div class="image"><iframe width="100%" height="450" scrolling="no" frameborder="no" src="https://w.soundcloud.com/player/?url=https%3A//api.soundcloud.com/playlists/199104128&amp;auto_play=false&amp;hide_related=false&amp;show_comments=true&amp;show_user=true&amp;show_reposts=false&amp;visual=true"></iframe></div>					
+                            <div class="content">
+                            <!--Title of soundcloud RSS feed-->
+								<h2>SOUNCLOUD</h2>
+                                <!--Short description of RSS feed-->
+								<p>Find out what songs are currently trending.</p>
+							</div>
+						</section>
+						<section class="spotlight">
+                        <!--Video embed of the youtube playlist-->
+							<div class="image"><iframe width="100%" height="300" src="https://www.youtube.com/embed/videoseries?list=PLx_tr69QV8CAASoA3hItFllMfrLTPUlbY" frameborder="0" allowfullscreen></iframe></div>
+                            
+                            
+                            
+                            <div class="content">
+                            <!--Title of the youtube feed-->
+								<h2>YOUTUBE</h2>
+                                <!--Short description of the youtube feed-->
+								<p>Have a look at the trending music videos in the music world.</p>
+							</div>
+						</section>
+                       
+					</section>
+
+
+				<!-- Instagram section -->
+					<section id="cta" class="wrapper style4">
+						<div class="inner">
+							<!-- Instagram Widget -->
+<script src="http://snapwidget.com/js/snapwidget.js"></script>
+<iframe src="http://snapwidget.com/in/?u=bm1lbWFnYXppbmV8aW58MTI1fDR8Mnx8bm98NXxub25lfG9uU3RhcnR8eWVzfHllcw==&ve=110316" title="Instagram Widget" class="snapwidget-widget" allowTransparency="true" frameborder="0" scrolling="no" style="border:none; overflow:hidden; width:100%;"></iframe>
+						</div>
+					</section>
+
+				<!-- Footer -->
+					<footer id="footer"> 
+                        <!-- Copyright area -->
+						<ul class="copyright">
+                        <!-- Copyright name rights, such as the site name and the developer of the site -->
+							<li>&copy; WAVES</li><li>Design: KYLE LINDSAY</li>
+						</ul>
+					</footer>
+                    <!-- End of footer -->
+
+			</div>
+
+		<!-- Scripts -->
+			<script src="assets/js/jquery.min.js"></script>
+			<script src="js/jquery.scrollex.min.js"></script>
+			<script src="js/jquery.scrolly.min.js"></script>
+			<script src="js/skel.min.js"></script>
+			<script src="js/util.js"></script>
+			<!--[if lte IE 8]><script src="assets/js/ie/respond.min.js"></script><![endif]-->
+			<script src="js/main.js"></script>
+            <!-- Scripts -->
+			<script src="js/jquery.min.js"></script>
+			<script src="js/jquery.scrollex.min.js"></script>
+			<script src="js/jquery.scrolly.min.js"></script>
+			<script src="js/skel.min.js"></script>
+			<script src="js/util.js"></script>
+			<!--[if lte IE 8]><script src="assets/js/ie/respond.min.js"></script><![endif]-->
+			<script src="assets/js/main.js"></script>
+	</body>
+     <!-- End of body and site -->
+</html>

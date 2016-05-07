@@ -1,0 +1,250 @@
+<!doctype html>
+<html>
+	<head>
+		<!-- content security for android -->
+		<!-- look here: http://stackoverflow.com/questions/30212306/no-content-security-policy-meta-tag-found-error-in-my-phonegap-application -->
+		<meta http-equiv="Content-Security-Policy" content="default-src * data: gap: https://ssl.gstatic.com 'unsafe-eval'; style-src 'self' 'unsafe-inline'; media-src *; script-src * 'unsafe-inline';">
+		<meta charset="utf-8">
+        <!-- Title -->
+		<title>SUBSCRIPTION</title>
+        <!-- Style sheet -->
+		<link href="mainstyle.css" rel="stylesheet" type="text/css" />
+        <!--This link will allow for a small icon apearing on the users browser-->
+      			<link rel="icon" type="image/ico" href="../icon.png"/>
+        <!-- Script -->
+        <script type="text/javascript" src="js/jquery-2.2.3.min.js"></script>
+		<script type="text/javascript" src="js/functions.js"></script>
+		<script type="text/javascript">
+		
+
+		var userid = 0;
+
+		$(document).ready(function() {
+			userid = getUrlParameter("userid");
+
+			selectSubscriptions();
+			
+			$(document).on("click", '.sublink', function(event) { 
+    			//alert($(this).attr("rssid"));
+				
+    			rssid = $(this).attr("rssid");
+    			action = $(this).attr("action");
+
+    			$.ajax({
+					beforeSend: function() {
+						$("#loading").show();
+					},
+					complete: function() {
+						$("#loading").hide();
+					},
+					type: 'GET',
+					dataType: "jsonp",
+					jsonp: "callback",
+					url: "http://wavemusic2.kylelindsay94.com/mng_subscription.php?action=" + action + "&user_id=" + userid + "&rss_id=" + rssid,
+					success: function(data) {
+
+						responseString="";
+
+						$.each(data, function (index, item) {
+						    // Use item in here
+						    responseString = item;
+						});
+
+						if(responseString.indexOf("SUCCESS")>-1) {
+
+								//get rest of data after prefix (LOGGEDIN:)
+								//the number is the character position to start from, we cut off the prefix
+								$("#messages").html(responseString.substring(8));
+
+								selectSubscriptions();
+
+							}
+						if(responseString.indexOf("FAIL")>-1) {
+
+							//get rest of data after prefix (NOTFOUND:)
+							//the number is the character position to start from, we cut off the prefix
+							$("#messages").html(responseString.substring(5));
+
+						}
+
+					},
+					error: function (jqXHR, textStatus, errorThrown) {
+						if (jqXHR.status == 500) {
+			                $("#messages").html('Internal error: ' + jqXHR.responseText);
+			            } else {
+			                $("#messages").html('Unexpected error.');
+			            }
+					}
+				});
+
+				return false;
+			});
+
+			$(document).on("click", '.rsslink', function(event) { 
+    			location.href="comments.html?userid=" + userid + "&rssid=" + $(this).attr("rssid");
+    			return false;
+    		});
+
+		});
+
+		function selectSubscriptions() {
+
+			$("#subcontent").html("");
+
+			$.ajax({
+				beforeSend: function() {
+					$("#loading").show();
+				},
+				complete: function() {
+					$("#loading").hide();
+				},
+				type: 'GET',
+				dataType: "jsonp",
+				jsonp: "callback",
+				url: "http://wavemusic2.kylelindsay94.com/mng_subscription.php?action=select&user_id=" + userid,
+				success: function(data) {
+
+					responseString="";
+
+					$.each(data, function (index, item) {
+					    // Use item in here
+					    responseString = item;
+					});
+
+					$("#subcontent").html(responseString);
+
+				},
+				error: function (jqXHR, textStatus, errorThrown) {
+					if (jqXHR.status == 500) {
+		                $("#messages").html('Internal error: ' + jqXHR.responseText);
+		            } else {
+		                $("#messages").html('Unexpected error.');
+		            }
+				}
+			});
+
+
+
+		}
+
+		</script>
+
+	</head>
+    <!--End of header-->
+
+	<!--Start of body, also giving the body a class-->
+	<body class="landing">
+
+		<!-- Page Wrapper -->
+			<div id="page-wrapper">
+
+				<!-- Header inside the body -->
+					<header id="header" class="alt">
+                     <a href="index.html"><img src="images/logout.svg" id="logout"></a>
+                    <!--Title of the site displayed inside the header image-->
+						<h1><a href="index.html">WAVES</a></h1>
+                        
+                        <!--Start of the navagation bar-->
+						<nav id="nav">
+							<ul>
+                            <!--List of the navagation bar-->
+								<li class="special">
+                                <!--Menu button to open up the navagation-->
+									<a href="#menu" class="menuToggle"><span>Menu</span></a>
+                                   
+									<div id="menu">
+										<ul>
+                                        	<!--Home page link-->
+											<li><a href="index.html">Home</a></li>
+                                            <!--Music news page link-->
+											<li><a href="register.html">Sign Up</a></li>
+                                            <!--Log in page link-->
+											<li><a href="login.html">Log In</a></li>
+                                            <!--Chat page link-->
+                                            <li><a href="chat/chat.html">Chat</a></li>
+                                            
+                                            <!--Sign up page link-->
+                                            <li><a href="1/artistotd.html">Artist of the week</a></li>
+                                            <!--Sign up page link-->
+                                            
+											
+										</ul>
+									</div>
+								</li>
+                                <!--End of list-->
+							</ul>
+                            <!--End of navagation-->
+						</nav>
+					</header>
+                    <!--End of header-->
+                    
+                    <!--Start of Banner -->
+					<section id="banner">
+						<div class="inner">
+                        <!--Text title which displays inside the image-->
+							<h2>Welcome</h2>
+							
+						</div>
+                        <!--A home button for the user to continue to the main page-->
+						<a href="#one" class="more scrolly">CHECK FEEDS</a>
+					</section>
+                    			<!-- First section -->
+					<section id="one" class="wrapper style1 special">
+						<div class="inner">
+                        	<!-- Header class for first section -->
+							<header class="major">
+                            	<!-- Title of first section -->
+								<h2>WELCOME USER</h2>
+                                	<!--Description for First section -->
+								<p>Check out RSS feeds, along with subscribing to the feeds available.</p>
+							</header>
+                            <!--Start of the icon list with in first section-->
+							
+						</div>
+					</section>
+                    
+                    	<!-- Second section -->
+					
+		<main>
+			
+			<div id="messages"></div>
+			
+            
+          <div id="subcontent"></div>
+            
+		</main> 
+
+		
+        		<footer id="footer">
+                        <!-- Copyright area -->
+						<ul class="copyright">
+                        <!-- Copyright name rights, such as the site name and the developer of the site -->
+							<li>&copy; WAVES</li><li>Design: KYLE LINDSAY</li>
+						</ul>
+					</footer>
+				
+		
+		<!-- Loading spining image -->
+		<img src="images/loader3.svg" id="loading" />
+        
+        </div>
+        
+        <!-- Scripts -->
+			<script src="assets/js/jquery.min.js"></script>
+			<script src="js/jquery.scrollex.min.js"></script>
+			<script src="js/jquery.scrolly.min.js"></script>
+			<script src="js/skel.min.js"></script>
+			<script src="js/util.js"></script>
+			<!--[if lte IE 8]><script src="assets/js/ie/respond.min.js"></script><![endif]-->
+			<script src="js/main.js"></script>
+            <!-- Scripts -->
+			<script src="js/jquery.min.js"></script>
+			<script src="js/jquery.scrollex.min.js"></script>
+			<script src="js/jquery.scrolly.min.js"></script>
+			<script src="js/skel.min.js"></script>
+			<script src="js/util.js"></script>
+			<!--[if lte IE 8]><script src="assets/js/ie/respond.min.js"></script><![endif]-->
+			<script src="assets/js/main.js"></script>
+
+	</body>
+</html>

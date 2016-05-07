@@ -1,0 +1,207 @@
+<!doctype html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<!-- content security for android -->
+		<!-- look here: http://stackoverflow.com/questions/30212306/no-content-security-policy-meta-tag-found-error-in-my-phonegap-application -->
+		<meta http-equiv="Content-Security-Policy" content="default-src * data: gap: https://ssl.gstatic.com 'unsafe-eval'; style-src 'self' 'unsafe-inline'; media-src *; script-src * 'unsafe-inline';">
+        <!-- Title -->
+		<title>REGISTER</title>
+        <!-- Link to main style sheet -->
+		<link href="mainstyle.css" rel="stylesheet" type="text/css" />
+        <!--This link will allow for a small icon apearing on the users browser-->
+      			<link rel="icon" type="image/ico" href="../icon.png"/>
+		<script type="text/javascript" src="js/jquery-2.2.3.min.js"></script>
+        
+		<script type="text/javascript" src="js/functions.js"></script>
+		<script>
+			$(document).ready(function() {
+
+				 $.support.cors = true;
+
+				$("#register").click(function() {
+
+					username = $("[name='username']").val();
+					password = $("[name='password']").val();
+					firstname = $("[name='firstname']").val();
+					lastname = $("[name='lastname']").val();
+
+					if(username=="") {
+						$("#messages").html("Please enter a username.");
+						return false;
+					}
+
+					if(password=="") {
+						$("#messages").html("Please enter a password.");
+						return false;
+					}
+
+					if(firstname=="") {
+						$("#messages").html("Please enter a first name.");
+						return false;
+					}
+
+					if(lastname=="") {
+						$("#messages").html("Please enter a last name.");
+						return false;
+					}
+
+					$.ajax({
+						beforeSend: function() {
+							$("#loading").show();
+						},
+						complete: function() {
+							$("#loading").hide();
+						},
+						type: 'GET',
+						dataType: "jsonp",
+						jsonp: "callback",
+						url: "http://wavemusic2.kylelindsay94.com/mng_user.php?action=register&r_username=" + username + "&r_password=" + password + "&r_firstname=" + firstname + "&r_lastname=" + lastname,
+						success: function(data) {
+
+
+							responseString="";
+
+							$.each(data, function (index, item) {
+							    // Use item in here
+							    responseString = item;
+							});
+
+							$("#messages").html(responseString);
+
+						},
+						error: function (jqXHR, textStatus, errorThrown) {
+							if (jqXHR.status == 500) {
+				                $("#messages").html('Internal error: ' + jqXHR.responseText);
+				            } else {
+				                $("#messages").html('Unexpected error.');
+				            }
+						}
+					});
+
+
+
+				});
+
+			});
+		</script>
+	</head>
+
+	<body>
+
+		<!-- Header inside the body -->
+					<header id="header" class="alt">
+                    <!--Title of the site displayed inside the header image-->
+						<h1><a href="index.html">WAVES</a></h1>
+                        <!--Start of the navagation bar-->
+						<nav id="nav">
+							<ul>
+                            <!--List of the navagation bar-->
+								<li class="special">
+                                <!--Menu button to open up the navagation-->
+									<a href="#menu" class="menuToggle"><span>Menu</span></a>
+									<div id="menu">
+										<ul>
+                                        	<!--Home page link-->
+											<li><a href="index.html">Home</a></li>
+                                            <!--Music news page link-->
+											<li><a href="register.html">Sign Up</a></li>
+                                            <!--Log in page link-->
+											<li><a href="login.html">Log In</a></li>
+                                            <!--Chat page link-->
+                                            <li><a href="chat/chat.html">Chat</a></li>
+                                            
+                                            <!--Sign up page link-->
+                                            <li><a href="1/artistotd.html">Artist of the week</a></li>
+                                            <!--Sign up page link-->
+                                            
+											
+										</ul>
+									</div>
+								</li>
+                                <!--End of list-->
+							</ul>
+                            <!--End of navagation-->
+						</nav>
+					</header>
+                    <!--End of header-->
+
+			<!-- Main area where the sign in form is located -->
+					<article id="main">
+						<header>
+							<section>
+                            		<!--Title for the form-->
+									<h4>SIGN UP</h4>
+                                    <!--Form action so the browser knows that this form is a action submission-->
+                                    <form>
+                <!-- Input username -->
+				<input type="text" name="username" placeholder="Username" id="demo-name"><br />
+  				<!-- Input password -->
+                <input type="password" name="password" placeholder="Password" id="password" required><br />
+				<!-- Input confrim password, coded out if live and button type changed to submit then confirm password works -->
+                <!--<input type="password" name="cpassword" placeholder="Confirm Password" id="confirm_password" required><br />-->
+                <!-- Input first name -->
+  				<input type="text" name="firstname" placeholder="First Name"><br />
+  				<!-- Input last name -->
+                <input type="text" name="lastname" placeholder="Last Name"><br />
+                <!-- Button to submit form (if button type changes to submit, confirm password works, but still signs user up, not enough time to fix this erro) -->
+  				<input type="button" value="Register" id="register"><br />
+                <!-- Message to display success -->
+			<div id="messages">
+			</div>
+            
+            <ul class="actions">
+                                               		<!--Submit button-->
+													
+                                                    <!--Button to send the user to the log in page-->
+                                                    <li><a href="login.html"><input type="button" value="REGISTERED?" class="special" /></a></li>
+                                                    <!--Button to reset the form-->
+													<li><input type="reset" value="Reset" /></li>
+												</ul>
+                
+              	
+				
+                
+			</form>
+								</section>
+                                
+                                
+						</header>
+						
+					</article>
+
+		</main>
+
+		<!-- Footer -->
+					<footer id="footer">
+                    
+                        <!-- Copyright area -->
+						<ul class="copyright">
+                        <!-- Copyright name rights, such as the site name and the developer of the site -->
+							<li>&copy; WAVES</li><li>Design: KYLE LINDSAY</li>
+						</ul>
+					</footer>
+                    <!-- End of footer -->
+		<!-- Loader iamge -->
+		<img src="images/loader1.gif" id="loading" />
+        <!-- Scripts -->
+			<script src="assets/js/jquery.min.js"></script>
+			<script src="js/jquery.scrollex.min.js"></script>
+			<script src="js/jquery.scrolly.min.js"></script>
+			<script src="js/skel.min.js"></script>
+			<script src="js/util.js"></script>
+			<!--[if lte IE 8]><script src="assets/js/ie/respond.min.js"></script><![endif]-->
+			<script src="js/main.js"></script>
+            <!-- Scripts -->
+			<script src="js/jquery.min.js"></script>
+			<script src="js/jquery.scrollex.min.js"></script>
+			<script src="js/jquery.scrolly.min.js"></script>
+			<script src="js/skel.min.js"></script>
+			<script src="js/util.js"></script>
+			<!--[if lte IE 8]><script src="assets/js/ie/respond.min.js"></script><![endif]-->
+			<script src="assets/js/main.js"></script>
+             <script src="js/form.js"></script>
+
+
+	</body>
+</html>

@@ -1,0 +1,465 @@
+<!doctype html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<!-- content security for android -->
+		<!-- look here: http://stackoverflow.com/questions/30212306/no-content-security-policy-meta-tag-found-error-in-my-phonegap-application -->
+		<meta http-equiv="Content-Security-Policy" content="default-src * data: gap: https://ssl.gstatic.com 'unsafe-eval'; style-src 'self' 'unsafe-inline'; media-src *; script-src * 'unsafe-inline';">
+        <!-- Title for page -->
+		<title>RSS FEEDS</title>
+        <!-- Style sheet linking to main -->
+		<link href="mainstyle.css" rel="stylesheet" type="text/css" />
+        <!-- Icon for browser -->
+        <!-- Script -->
+        <link rel="icon" type="image/ico" href="../icon.png"/>
+		<script type="text/javascript" src="js/jquery-2.2.3.min.js"></script>
+		<script type="text/javascript" src="js/functions.js"></script>
+		<script type="text/javascript">
+		
+		var commentsUpFlag = false;
+		rssId = getUrlParameter("rssid");
+		userId = getUrlParameter("userid");
+
+//https://api.jquery.com/jQuery.parseXML/
+
+		//FUNCTION TO PARSE RSS FEED --------------------------------------------------------------
+		function getFeed (rsscontent) {
+			
+			var xml = rsscontent;
+			 xmlDoc = $.parseXML( xml ),
+			 $xml = $( xmlDoc ),
+			 $channel = $xml.find( "channel" );
+			 $channel.children().each(function() {
+
+			 	if($(this).prop("tagName")=="title") {
+					htmlString = "<div class='rsstitle'>";
+					htmlString+= "<h1>" + $(this).text() + "</h1>";
+					htmlString += "</div>";
+			 		$("main").append(htmlString);
+			 	}
+
+			 	if($(this).prop("tagName")=="item") {
+
+					htmlString = "<div class='rssitem'>";
+			 		$(this).children().each(function() {
+
+						
+			 			if($(this).prop("tagName")=="title") {
+			 				htmlString+= "<h1>" + $(this).text() + "</h1>";
+			 			}
+			 			if($(this).prop("tagName")=="description") {
+			 				htmlString+= "<p>" + $(this).text() + "</p>";
+			 			}
+			 			if($(this).prop("tagName")=="link") {
+			 				htmlString+= "<a href='" + $(this).text() + "'>Link</a>";
+			 			}
+			 		});
+			 		
+			 		htmlString += "</div>";
+
+			 		$("main").append(htmlString);
+			 	}
+
+			 });
+		}
+
+		//DOCUMENT READY EVENT HANDLER =========================================================
+		$(document).ready(function() {
+			//RSS fEED RETRIEVER --------------------------------------------------------------
+			
+			$.ajax({
+				beforeSend: function() {
+					$("#loading").show();
+				},
+				complete: function() {
+					$("#loading").hide();
+				},
+				type: 'GET',
+				dataType: "jsonp",
+				jsonp: "callback",
+				url: "http://wavemusic2.kylelindsay94.com/mng_feed.php?rssid=" + rssId,
+				success: function(data) {
+
+					responseString="";
+					$.each(data, function (index, item) {
+				    // Use item in here
+					    responseString = item;
+					});
+
+					getFeed(responseString);
+
+					},
+					error: function (jqXHR, textStatus, errorThrown) {
+						if (jqXHR.status == 500) {
+			                $("#messages").html('Internal error: ' + jqXHR.responseText);
+			            } else {
+			                $("#messages").html('Unexpected error.');
+			            }
+					}
+				});
+
+			//COMMENTS CONTAINER HEIGHT ANIMATION -----------------------------------------
+			$( "#commentslink" ).click(function() {
+
+				if(commentsUpFlag) { 
+
+				  	$("#commentscontainer").animate({
+				    	bottom: "-400"
+				  	}, 500, function() {
+				    	commentsUpFlag = false;
+				  	});
+
+				} else {
+				  	$("#commentscontainer").animate({
+				    	bottom: "0"
+				  	}, 500, function() {
+				    	commentsUpFlag = true;
+				  	});
+				}
+				return false;
+			});
+
+			//COMMENT RETRIEVAL -----------------------------------------
+			selectComments();
+
+			//CLEAR COMMENT TEXT BOX ------------------------------------------------------
+			$("#clearbtn").click(function() {
+				$("#commentbox").val('');
+			});
+
+			//UPDATE COMMENTS -------------------------------------------------------------
+			$(document).on("click", '.updatecom', function(event) { 
+				var commentId = $(this).attr('comid');
+				$('#commentbtn').attr('mode','update');
+				$('#commentbtn').attr('commentid',commentId);
+				$('#commentbtn').val('Edit Comment');
+
+				var commentContent = "";
+
+				//cycle through comments, if ID matchs, set textarea to have comment content
+				$('.comment').each(function() {
+					if($(this).attr('comid')==commentId) {
+						$('#commentbox').val($(this).html());
+					}
+				});
+
+			});
+
+			//INSERT / UPDATE BUTTON CLICK =================================================
+
+			$(document).on("click", '#commentbtn', function(event) { 
+
+
+			var ajaxString = "";
+			var commentContent = $('#commentbox').val();
+
+			if(commentContent=="") {
+				alert("You need to enter more than nothing");
+			} else {
+				commentContent = encodeURI(commentContent);
+			}
+
+			//INSERT COMMENT - SEND --------------------------------------------------------
+
+			
+				if($(this).attr('mode')=='insert') {
+
+					ajaxString = "action=insert&user_id=" + userId + "&rss_id=" + rssId + "&comment_content=" + commentContent;
+					
+				}
+
+
+			//UPDATE COMMENTS - SEND -------------------------------------------------------
+
+				if($(this).attr('mode')=='update') {
+
+					ajaxString = "action=update&comment_id=" + $(this).attr('commentid') + "&comment_content=" + commentContent;
+					
+				}
+
+
+				$.ajax({
+					beforeSend: function() {
+						$("#loading").show();
+					},
+					complete: function() {
+						$("#loading").hide();
+					},
+					type: 'GET',
+					dataType: "jsonp",
+					jsonp: "callback",
+					url: "http://wavemusic2.kylelindsay94.com/mng_comment.php?" + ajaxString,
+					success: function(data) {
+
+						responseString="";
+
+						$.each(data, function (index, item) {
+						    // Use item in here
+						    responseString = item;
+						});
+
+
+						if(responseString.indexOf("SUCCESS")>-1) {
+
+							//get rest of data after prefix (SUCCESS:)
+							//the number is the character position to start from, we cut off the prefix
+							responseString = responseString.substring(8);
+							selectComments();
+							$('#commentbtn').attr('mode','insert');
+							$('#commentbtn').attr('commentid','');
+							$('#commentbtn').val('Add');
+						}
+
+						if(responseString.indexOf("FAIL")>-1) {
+
+							//get rest of data after prefix (FAIL:)
+							//the number is the character position to start from, we cut off the prefix
+							responseString = responseString.substring(5);
+
+						}
+
+						$("#messages").html(responseString);
+
+					},
+					error: function (jqXHR, textStatus, errorThrown) {
+						if (jqXHR.status == 500) {
+			                $("#messages").html('Internal error: ' + jqXHR.responseText);
+			            } else {
+			                $("#messages").html('Unexpected error.');
+			            }
+					}
+				});
+
+
+				return false;
+			});
+
+
+			//DELETE COMMENT ---------------------------------------------------------------
+			$(document).on("click", '.deletecom', function(event) { 
+
+				$.ajax({
+					beforeSend: function() {
+						$("#loading").show();
+					},
+					complete: function() {
+						$("#loading").hide();
+					},
+					type: 'GET',
+					dataType: "jsonp",
+					jsonp: "callback",
+					url: "http:/wavemusic2.kylelindsay94.com/mng_comment.php?action=delete&comment_id=" + $(this).attr('comid'),
+					success: function(data) {
+
+						responseString="";
+
+						$.each(data, function (index, item) {
+						    // Use item in here
+						    responseString = item;
+						});
+
+
+						if(responseString.indexOf("SUCCESS")>-1) {
+
+							//get rest of data after prefix (SUCCESS:)
+							//the number is the character position to start from, we cut off the prefix
+							responseString = responseString.substring(8);
+							selectComments();
+
+						}
+
+						if(responseString.indexOf("FAIL")>-1) {
+
+							//get rest of data after prefix (FAIL:)
+							//the number is the character position to start from, we cut off the prefix
+							responseString = responseString.substring(5);
+
+						}
+
+						$("#messages").html(responseString);
+
+					},
+					error: function (jqXHR, textStatus, errorThrown) {
+						if (jqXHR.status == 500) {
+			                $("#messages").html('Internal error: ' + jqXHR.responseText);
+			            } else {
+			                $("#messages").html('Unexpected error.');
+			            }
+					}
+				});
+
+    			return false;
+    		});
+
+		});
+			
+			//COMMENT RETRIEVAL FUNCTION ---------------------------------------------------
+			function selectComments() {
+
+			$("#comcontent").html("");
+
+			$.ajax({
+				beforeSend: function() {
+					$("#loading").show();
+				},
+				complete: function() {
+					$("#loading").hide();
+				},
+				type: 'GET',
+				dataType: "jsonp",
+				jsonp: "callback",
+				url: "http://wavemusic2.kylelindsay94.com/mng_comment.php?action=select&user_id=" + userId + "&rss_id=" + rssId,
+				success: function(data) {
+
+					responseString="";
+
+					$.each(data, function (index, item) {
+					    // Use item in here
+					    responseString = item;
+					});
+
+
+					if(responseString.indexOf("SUCCESS")>-1) {
+
+						//get rest of data after prefix (SUCCESS:)
+						//the number is the character position to start from, we cut off the prefix
+						responseString = responseString.substring(8);
+
+					}
+
+					$("#comcontent").html(responseString);
+
+				},
+				error: function (jqXHR, textStatus, errorThrown) {
+					if (jqXHR.status == 500) {
+		                $("#messages").html('Internal error: ' + jqXHR.responseText);
+		            } else {
+		                $("#messages").html('Unexpected error.');
+		            }
+				}
+			});
+		}
+
+		</script>
+
+	</head>
+
+	<!--End of header-->
+    <!--Start of body, also giving the body a class-->
+	<body class="landing">
+
+		<!-- Page Wrapper -->
+			<div id="page-wrapper">
+
+				<!-- Header inside the body -->
+					<header id="header" class="alt">
+                    <!--Title of the site displayed inside the header image-->
+						<h1><a href="index.html">WAVES</a></h1>
+                        <!--Start of the navagation bar-->
+						<nav id="nav">
+							<ul>
+                            <!--List of the navagation bar-->
+								<li class="special">
+                                <!--Menu button to open up the navagation-->
+									<a href="#menu" class="menuToggle"><span>Menu</span></a>
+									<div id="menu">
+										<ul>
+                                        	<!--Home page link-->
+											<li><a href="index.html">Home</a></li>
+                                            <!--Music news page link-->
+											<li><a href="register.html">Sign Up</a></li>
+                                            <!--Log in page link-->
+											<li><a href="login.html">Log In</a></li>
+                                            <!--Chat page link-->
+                                            <li><a href="#">Chat</a></li>
+                                            
+                                            <!--Sign up page link-->
+                                            <li><a href="1/artistotd.html">Artist of the week</a></li>
+                                            <!--Sign up page link-->
+                                            
+											
+										</ul>
+									</div>
+								</li>
+                                <!--End of list-->
+							</ul>
+                            <!--End of navagation-->
+						</nav>
+					</header>
+                    <!--End of header-->
+<!--Start of Banner -->
+					<section id="banner">
+						<div class="inner">
+                        <!--Text title which displays inside the image-->
+							<h2>WAVES</h2>
+							
+						</div>
+                        <!--A home button for the user to continue to the main page-->
+						<a href="#one" class="more scrolly">RSS</a>
+					</section>
+                    
+                    	<!-- First section -->
+					<section id="one" class="wrapper style1 special">
+						<div class="inner">
+                        	<!-- Header class for first section -->
+							<header class="major">
+                            	<!-- Title of first section -->
+								<a href="subscriptions.html"><img src="images/round-account-button-with-user-inside.svg" style="width:5%; height:5%"></a>
+                                	<!--Description for First section -->
+								
+							</header>
+                            <!--Start of the icon list with in first section-->
+							
+						</div>
+					</section>
+
+		<main>
+        <!-- Message to apear after they subscribe or unsubscribe -->
+			<div id="messages">
+			</div>
+
+		</main>
+
+		<!-- Footer -->
+					<footer id="footer">
+                        <!-- Copyright area -->
+						<ul class="copyright">
+                        <!-- Copyright name rights, such as the site name and the developer of the site -->
+							<li>&copy; WAVES</li><li>Design: KYLE LINDSAY</li>
+						</ul>
+					</footer>
+                    <!-- End of footer -->
+		<!-- Comment container -->
+		<div id="commentscontainer">
+				<a href="#" id="commentslink">Comments</a>
+				<div id="comcontent">
+
+				</div>
+				<textarea id="commentbox"></textarea>
+                <!-- Enter button -->
+				<input type="button" value="Add" id="commentbtn" mode="insert" />
+                <!-- CLear button -->
+				<input type="button" value="X" id="clearbtn" />
+		</div>
+		<!-- Loader image -->
+		<img src="images/loader3.svg" id="loading" />
+        
+        	<!-- Scripts -->
+			<script src="assets/js/jquery.min.js"></script>
+			<script src="js/jquery.scrollex.min.js"></script>
+			<script src="js/jquery.scrolly.min.js"></script>
+			<script src="js/skel.min.js"></script>
+			<script src="js/util.js"></script>
+			<!--[if lte IE 8]><script src="assets/js/ie/respond.min.js"></script><![endif]-->
+			<script src="js/main.js"></script>
+            <!-- Scripts -->
+			<script src="js/jquery.min.js"></script>
+			<script src="js/jquery.scrollex.min.js"></script>
+			<script src="js/jquery.scrolly.min.js"></script>
+			<script src="js/skel.min.js"></script>
+			<script src="js/util.js"></script>
+			<!--[if lte IE 8]><script src="assets/js/ie/respond.min.js"></script><![endif]-->
+			<script src="assets/js/main.js"></script>
+
+	</body>
+</html>

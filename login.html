@@ -1,0 +1,204 @@
+<!doctype html>
+<html>
+	<head>
+    
+		<meta charset="utf-8">
+		<!-- content security for android -->
+		<!-- look here: http://stackoverflow.com/questions/30212306/no-content-security-policy-meta-tag-found-error-in-my-phonegap-application -->
+		<meta http-equiv="Content-Security-Policy" content="default-src * data: gap: https://ssl.gstatic.com 'unsafe-eval'; style-src 'self' 'unsafe-inline'; media-src *; script-src * 'unsafe-inline';">
+		<title>Log in</title>
+        <!--This link will allow for a small icon apearing on the users browser-->
+      	<link rel="icon" type="image/ico" href="../icon.png"/>
+        <!--Link to style sheet-->
+		<link href="mainstyle.css" rel="stylesheet" type="text/css" />
+        <!--Script-->
+		<script type="text/javascript" src="js/jquery-2.2.3.min.js"></script>
+		<script type="text/javascript" src="js/functions.js"></script>
+		<script>
+			$(document).ready(function() {
+
+				 $.support.cors = true;
+
+				$("#login").click(function() {
+
+					username = $("[name='username']").val();
+					password = $("[name='password']").val();
+
+					if(username=="") {
+						$("#messages").html("Please enter a username.");
+						return false;
+					}
+
+					if(password=="") {
+						$("#messages").html("Please enter a password.");
+						return false;
+					}
+
+					$.ajax({
+						beforeSend: function() {
+							$("#loading").show();
+						},
+						complete: function() {
+							$("#loading").hide();
+						},
+						type: 'GET',
+						dataType: "jsonp",
+						jsonp: "callback",
+						url: "http://wavemusic2.kylelindsay94.com/mng_user.php?action=login&l_username=" + username + "&l_password=" + password,
+						success: function(data) {
+
+
+							responseString="";
+
+							$.each(data, function (index, item) {
+							    // Use item in here
+							    responseString = item;
+							});
+
+							if(responseString.indexOf("LOGGEDIN")>-1) {
+
+								//get rest of data after prefix (LOGGEDIN:)
+								//the number is the character position to start from, we cut off the prefix
+								userid = responseString.substring(9);
+
+								location.href="subscriptions.html?userid=" + userid;
+
+							}
+							if(responseString.indexOf("NOTFOUND")>-1) {
+
+								//get rest of data after prefix (NOTFOUND:)
+								//the number is the character position to start from, we cut off the prefix
+								message = responseString.substring(9);
+
+								$("#messages").html(message);
+
+							}
+							if(responseString.indexOf("INVALID")>-1) {
+
+								//get rest of data after prefix (INVALID:)
+								//the number is the character position to start from, we cut off the prefix
+								message = responseString.substring(8);
+
+								$("#messages").html(message);
+
+							}
+						},
+						error: function (jqXHR, textStatus, errorThrown) {
+							if (jqXHR.status == 500) {
+				                $("#messages").html('Internal error: ' + jqXHR.responseText);
+				            } else {
+				                $("#messages").html('Unexpected error.');
+				            }
+						}
+					});
+
+
+
+				});
+
+			});
+		</script>
+	</head>
+
+	<body>
+
+		<!-- Header inside the body -->
+					<header id="header" class="alt">
+                    <!--Title of the site displayed inside the header image-->
+						<h1><a href="index.html">WAVES</a></h1>
+                        <!--Start of the navagation bar-->
+						<nav id="nav">
+							<ul>
+                            <!--List of the navagation bar-->
+								<li class="special">
+                                <!--Menu button to open up the navagation-->
+									<a href="#menu" class="menuToggle"><span>Menu</span></a>
+									<div id="menu">
+										<ul>
+                                        	<!--Home page link-->
+											<li><a href="index.html">Home</a></li>
+                                            <!--Music news page link-->
+											<li><a href="register.html">Sign Up</a></li>
+                                            <!--Log in page link-->
+											<li><a href="login.html">Log In</a></li>
+                                            <!--Chat page link-->
+                                            <li><a href="chat/chat.html">Chat</a></li>
+                                            
+                                            <!--Sign up page link-->
+                                            <li><a href="1/artistotd.html">Artist of the week</a></li>
+                                            <!--Sign up page link-->
+                                            
+											
+										</ul>
+									</div>
+								</li>
+                                <!--End of list-->
+							</ul>
+                            <!--End of navagation-->
+						</nav>
+					</header>
+                    <!--End of header-->
+
+		<main>
+
+		
+
+			<!-- Main area where the sign in form is located -->
+					<article id="main">
+						<header>
+							<section>
+                            		<!--Title for the form-->
+									<h4>SIGN IN</h4>
+                                    <!--Form action so the browser knows that this form is a action submission-->
+                                    <form>
+                 <!-- Input Username -->
+				<input type="text" name="username" placeholder="Username"><br />
+  				 <!-- Input Password -->
+                <input type="password" name="password" placeholder="Password"><br />
+  				 <!-- Input Log in -->
+                <input type="button" value="Log In" id="login">
+                <div id="messages">
+
+			</div>
+                <a href="register.html"><input type="button" value="SIGN UP" class="special" /></a>
+              	<!--Button to reset the form-->
+				<input type="reset" value="Reset" />
+                
+			</form>
+								</section>
+						</header>
+						
+					</article>
+		</main>
+
+		<!-- Footer -->
+					<footer id="footer">
+                    
+                        <!-- Copyright area -->
+						<ul class="copyright">
+                        <!-- Copyright name rights, such as the site name and the developer of the site -->
+							<li>&copy; WAVES</li><li>Design: KYLE LINDSAY</li>
+						</ul>
+					</footer>
+                    <!-- End of footer -->
+		 <!-- Pinner Loader  -->
+		<img src="images/loader3.svg" id="loading" />
+
+<!-- Scripts -->
+			<script src="assets/js/jquery.min.js"></script>
+			<script src="js/jquery.scrollex.min.js"></script>
+			<script src="js/jquery.scrolly.min.js"></script>
+			<script src="js/skel.min.js"></script>
+			<script src="js/util.js"></script>
+			<!--[if lte IE 8]><script src="assets/js/ie/respond.min.js"></script><![endif]-->
+			<script src="js/main.js"></script>
+            <!-- Scripts -->
+			<script src="js/jquery.min.js"></script>
+			<script src="js/jquery.scrollex.min.js"></script>
+			<script src="js/jquery.scrolly.min.js"></script>
+			<script src="js/skel.min.js"></script>
+			<script src="js/util.js"></script>
+			<!--[if lte IE 8]><script src="assets/js/ie/respond.min.js"></script><![endif]-->
+			<script src="assets/js/main.js"></script>
+	</body>
+</html>

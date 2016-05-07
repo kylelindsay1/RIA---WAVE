@@ -1,0 +1,171 @@
+@import url(https://fonts.googleapis.com/css?family=Open+Sans:400,300);
+
+*, *:before, *:after {
+  box-sizing: border-box;
+}
+
+@black: #333;
+@white: #FFF;
+@orange: rgba(236, 181, 23, 1);
+@blue: rgba(56, 118, 151, 1);
+
+.gradient-background(@r1: 51, @g1: 51, @b1: 51, @a1: .55, @r2: 51, @g2: 51, @b2: 51, @a2: 0, @hex1: @orange, @hex2: @black) {
+    background-color: rgba(@r1, @g1, @b1, @a1) 0%;
+    background-image: -webkit-gradient(linear, left top, right top, from(rgba(@r1, @g1, @b1, @a1) 0%), to(rgba(@r2, @g2, @b2, @a2) 100%));
+    background-image: -webkit-linear-gradient(left, rgba(@r1, @g1, @b1, @a1) 0%, rgba(@r2, @g2, @b2, @a2) 100%);
+    background-image: -moz-linear-gradient(left, rgba(@r1, @g1, @b1, @a1) 0%, rgba(@r2, @g2, @b2, @a2) 100%);
+    background-image: -ms-linear-gradient(left, rgba(@r1, @g1, @b1, @a1) 0%, rgba(@r2, @g2, @b2, @a2) 100%);
+    background-image: -o-linear-gradient(left, rgba(@r1, @g1, @b1, @a1) 0%, rgba(@r2, @g2, @b2, @a2) 100%);
+    filter: progid:DXImageTransform.Microsoft.gradient(startColorstr=@hex1, endColorstr=@hex2, GradientType=1);
+}
+
+html, body {
+  margin: 0;
+  padding: 0;
+  background-image: url("http://wallpapers.wallhaven.cc/wallpapers/full/wallhaven-250653.jpg");
+  background-position: center center;
+  background-repeat: no-repeat;
+  background-size: cover;
+  width: 100%;
+  height: 100%;
+  overflow: auto;
+  font-family: "Open Sans", sans-serif;
+}
+
+iframe {
+  display: none;
+}
+
+.player {
+  display: none;
+  &-info {
+    margin: 0 auto;
+    height: 100vh;
+    padding: 15px;
+    &-art {
+      width: 100px;
+      height: 100px;
+      display: block;
+      margin: 40px auto;
+      background-size: cover;
+      background-repeat: no-repeat;
+      border-radius: 50%;
+      border: 6px solid @white;
+      box-shadow: 0 3px 5px 2px rgba(51, 51, 51, .355);
+    }
+    &-artist,
+    &-title {
+      text-align: center;
+      color: @white;
+      text-shadow: 2px 2px rgba(51, 51, 51, .08);
+      &.h1 {
+        font-size: 3.5rem;
+        font-weight: 400;
+      }
+      &.h4 {
+        font-size: 2rem;
+        font-weight: 300;
+        text-transform: uppercase;
+      }
+    }
+    &-progress {
+      width: 100%;
+      height: 6px;
+      display: inline-block;
+      position: relative;
+      background-color: @white;
+      border-radius: 15px;
+      box-shadow: 0 3px 5px 2px rgba(51, 51, 51, .355);
+      &-bar {
+        position: absolute;
+        display: block;
+        top: 0;
+        left: 0;
+        background-color: @blue;
+        width: 0;
+        height: 6px;
+        border-radius: 15px;
+      }
+    }
+    &-controller {
+      .button {
+        outline: none;
+        border: 2px solid @white;
+        margin: 15px 0;
+        padding: 12px 16px;
+        width: 100%;
+        white-space: nowrap;
+        font-size: 12px;
+        text-transform: uppercase;
+        font-weight: 400;
+        vertical-align: middle;
+        line-height: 18px;
+        text-align: center;
+        text-decoration: none;
+        color: @white;
+        background-color: transparent;
+        border-radius: 0;
+        cursor: pointer;
+        transition: all 350ms ease;
+        margin-bottom: 2rem;
+        box-shadow: 0 3px 5px 2px rgba(51, 51, 51, .355);
+        &:hover {
+          border-color: @white;
+          background-color: rgba(56, 118, 151, .655);
+          box-shadow: 0 4px 7px 0px rgba(51, 51, 51, .355);
+        }
+        &-br-r {
+          border-radius: 0 22px 22px 0;
+        }
+        &-br-l {
+          border-radius: 22px 0 0 22px;
+        }
+      }
+    }
+  }
+}
+
+@offset: 187;
+@duration: 1.4s;
+
+.spinner {
+  animation: rotator @duration linear infinite;
+  display: block;
+  margin: 40px auto;
+}
+
+@keyframes rotator {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(270deg); }
+}
+
+.path {
+  stroke-dasharray: @offset;
+  stroke-dashoffset: 0;
+  transform-origin: center;
+  stroke: @blue;
+  stroke-width: 3;
+  animation:
+    dash @duration ease-in-out infinite, 
+    colors (@duration * 4) ease-in-out infinite;
+}
+
+@keyframes colors {
+	// 0% { stroke: @blue; }
+	// 25% { stroke: @white; }
+	// 50% { stroke: @blue; }
+	// 75% { stroke: @white; }
+	// 100% { stroke: @blue; }
+}
+
+@keyframes dash {
+ 0% { stroke-dashoffset: @offset; }
+ 50% {
+   stroke-dashoffset: @offset / 4;
+   transform:rotate(135deg);
+ }
+ 100% {
+   stroke-dashoffset: @offset;
+   transform:rotate(450deg);
+ }
+}

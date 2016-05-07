@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+    <widget xmlns   = "http://www.w3.org/ns/widgets"
+        xmlns:gap   = "http://phonegap.com/ns/1.0"
+        id          = "com.blackpool.ria"
+        version     = "1.0.0" >
+
+    <!-- versionCode is optional and Android only -->
+    <gap:plugin name="com.indigoway.cordova.whitelist.whitelistplugin" />
+    <access origin="http://*" />
+    <access origin="*" />
+
+	<icon src="icon.png" />
+    <name>WAVE</name>
+
+    <description>
+        Waves is the application and site which offers you, the users with all elements of music.
+    </description>
+
+    <author email="kylelindsayus@gmail.com">
+        Kyle Lindsay
+    </author>
+	
+	<preference name = "orientation" value = "portrait" />
+	
+	<gap:plugin name="org.apache.cordova.splashscreen" />
+	
+	<preference name="SplashScreen" value="screen"/>
+	
+	<preference name="SplashScreenDelay" value="3000" />
+
+	
+	 <gap:splash gap:platform="android" gap:qualifier="port-ldpi" src="res/drawable-port-ldpi/screen.png" />
+	<gap:splash gap:platform="android" gap:qualifier="port-mdpi" src="res/drawable-port-mdpi/screen.jpg" />
+	<gap:splash gap:platform="android" gap:qualifier="port-hdpi" src="res/drawable-port-hdpi/screen.png" />
+	<gap:splash gap:platform="android" gap:qualifier="port-xhdpi" src="res/drawable-port-xhdpi/screen.png" />	
+	
+	
+	<gap:splash src="splash.png" />
+
+	<allow-navigation href="http:www.wavemusic2.kylelindsay94.com" />
+	
+</widget>
